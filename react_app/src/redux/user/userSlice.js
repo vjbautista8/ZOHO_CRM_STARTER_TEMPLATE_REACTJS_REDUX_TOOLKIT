@@ -29,24 +29,21 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getFields.pending, (state, { meta }) => {
+      .addCase(getFields.pending, (state, action) => {
         state.LOADING = true;
-        console.log(`getFields-pending-meta`, meta);
+        console.log(`getFields-pending-action`, action);
       })
-      .addCase(getFields.fulfilled, (state, { payload, meta }) => {
+      .addCase(getFields.fulfilled, (state, action) => {
         toast.success('Successfully getFields.');
-        console.log(`getFields-fulfilled-meta`, meta);
-        console.log(`getFields-fulfilled-payload`, payload);
+        console.log(`getFields-rejected-action`, action);
         state.LOADING = false;
-        state[`getFields_${meta?.arg?.Entity}`] = payload;
+        state[`getFields_${action?.meta?.arg?.Entity}`] = action?.payload;
         // [`getFields_${meta?.arg?.Entity}`]
       })
-      .addCase(getFields.rejected, (state, { payload, meta }) => {
-        console.log(`getFields-rejected-payload`, meta);
+      .addCase(getFields.rejected, (state, action) => {
+        console.log(`getFields-rejected-action`, action);
         state.LOADING = false;
-        toast.error(
-          'Something went wrong. Please fill-up the required fields.'
-        );
+        toast.error(`${action?.error?.message}`);
       });
   },
 });
