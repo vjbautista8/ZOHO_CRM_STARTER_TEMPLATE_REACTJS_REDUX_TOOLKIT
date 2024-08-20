@@ -36,6 +36,24 @@ export const getModules = createAsyncThunk(
     }
   }
 );
+
+export const getAllRecords = createAsyncThunk(
+  'user/getAllRecords',
+  async (data, thunkAPI) => {
+    try {
+      const response = ZOHO.CRM.API.getAllRecords({
+        Entity: data?.Entity,
+        sort_order: data?.sort_order,
+        per_page: data?.per_page,
+        page: data?.page,
+      });
+
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -53,7 +71,9 @@ const userSlice = createSlice({
       .addCase(getFields.fulfilled, (state, action) => {
         toast.success(`Successfully getFields of ${action?.meta?.arg?.Entity}`);
         console.log(`getFields-fulfilled-action`, action);
-        state.MODULE_FIELDS = action?.payload?.fields;
+        state.MODULE_FIELDS = action?.payload?.fields
+          ? action?.payload?.fields
+          : [];
       })
       .addCase(getFields.rejected, (state, action) => {
         console.log(`getFields-rejected-action`, action);
@@ -71,7 +91,23 @@ const userSlice = createSlice({
       })
       .addCase(getModules.rejected, (state, action) => {
         console.log(`getModules-rejected-action`, action);
-        state.MODULES = action?.payload?.modules;
+        state.MODULES = [];
+        toast.error(`${action?.error?.message}`);
+      })
+      //==================getAllRecords
+      .addCase(getAllRecords.pending, (state, action) => {
+        console.log(`getAllRecords-pending-action`, action);
+      })
+      .addCase(getAllRecords.fulfilled, (state, action) => {
+        toast.success(`Successfully getAllRecords`);
+        console.log(`getAllRecords-fulfilled-action`, action);
+        state.MODULE_REPORTS = action?.payload?.data
+          ? action?.payload?.data
+          : [];
+      })
+      .addCase(getAllRecords.rejected, (state, action) => {
+        console.log(`getAllRecords-rejected-action`, action);
+        state.MODULE_REPORTS = [];
         toast.error(`${action?.error?.message}`);
       });
   },
