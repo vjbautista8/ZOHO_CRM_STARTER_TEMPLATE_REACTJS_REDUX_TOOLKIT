@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import { Provider } from 'react-redux';
 import { store } from './store';
@@ -27,7 +28,7 @@ window.ZOHO.embeddedApp.on('PageLoad', function (data) {
   // For Business Card View
   // MAX_HEIGHT, 200
   // Standard Width, 1000
-  window.ZOHO.CRM.UI.Resize({ height: 700, width: 1350 });
+  // window.ZOHO.CRM.UI.Resize({ height: 700, width: 1350 });
   root.render(
     <Provider store={store}>
       <App tab='home' data={data} />
