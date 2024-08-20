@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { handleStateChange } from './redux/user/userSlice';
+import { getFields, handleStateChange } from './redux/user/userSlice';
 import Home from './pages/Home';
 const App = ({ data }) => {
   const dispatch = useDispatch();
@@ -12,11 +12,21 @@ const App = ({ data }) => {
     console.log('PAGE', pageQuery);
     console.log('SERVICE_ORIGIN', serviceOrigin);
     console.log('METADATA', data);
-    dispatch(handleStateChange({ name: 'PAGE', value: pageQuery }));
-    dispatch(
-      handleStateChange({ name: 'SERVICE_ORIGIN', value: serviceOrigin })
-    );
-    dispatch(handleStateChange({ name: 'METADATA', value: data }));
+
+    const fetchData = async () => {
+      dispatch(handleStateChange({ name: 'PAGE', value: pageQuery }));
+      dispatch(
+        handleStateChange({ name: 'SERVICE_ORIGIN', value: serviceOrigin })
+      );
+      dispatch(handleStateChange({ name: 'METADATA', value: data }));
+      await dispatch(getFields({ Entity: 'Contacts' })).then(
+        (dispatchResult) => {
+          if (dispatchResult.error)
+            throw new Error(dispatchResult.error.message);
+        }
+      );
+    };
+    fetchData();
   }, []);
   return <Home />;
 };

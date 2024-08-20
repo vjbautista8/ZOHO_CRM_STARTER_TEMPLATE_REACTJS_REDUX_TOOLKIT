@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ComponentsPage from './ComponentsPage';
-import CallTrailHome from './CallTrailHome';
+import { getFields } from '../redux/user/userSlice';
+
 const Home = () => {
-  const { PAGE } = useSelector((store) => store.user);
-  if (PAGE == 'calltrailbutton') {
-    return <CallTrailHome />;
+  const { PAGE, LOADING } = useSelector((store) => store.user);
+
+  if (LOADING) {
+    return <h1>Loading..</h1>;
   }
-  return <div>{PAGE}</div>;
+  return <h1>{PAGE}</h1>;
 };
 
 export default Home;
